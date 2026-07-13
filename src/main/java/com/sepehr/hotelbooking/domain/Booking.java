@@ -2,11 +2,17 @@ package com.sepehr.hotelbooking.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
 @Table(name = "booking")
@@ -85,10 +91,6 @@ public class Booking {
     private LocalDateTime createdAt;
 
 
-    protected Booking() {
-    }
-
-
     public Booking(
             User user,
             Room room,
@@ -103,20 +105,5 @@ public class Booking {
         this.totalPrice = totalPrice;
         this.status = BookingStatus.PENDING;
         this.createdAt = LocalDateTime.now();
-    }
-
-
-    public Long getId() {
-        return id;
-    }
-
-
-    public BookingStatus getStatus() {
-        return status;
-    }
-
-
-    public BigDecimal getTotalPrice() {
-        return totalPrice;
     }
 }
