@@ -1,4 +1,4 @@
-package com.sepehr.hotel.booking;
+package com.sepehr.hotelbooking;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

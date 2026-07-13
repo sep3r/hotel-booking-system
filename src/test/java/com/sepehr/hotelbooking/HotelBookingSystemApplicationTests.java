@@ -1,4 +1,4 @@
-package com.sepehr.hotel.booking;
+package com.sepehr.hotelbooking;
 
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
