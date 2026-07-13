@@ -58,7 +58,7 @@ public class Hotel {
     private Integer starRating;
 
     @NotBlank(message = "Phone number is required.")
-    @Size(max = 20)
+    @Size(max = 20,  message = "Phone number must not exceed 20 characters.")
     @Column(nullable = false,
             length = 20)
     @Pattern(regexp = "")
