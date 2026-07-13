@@ -3,6 +3,8 @@ package com.sepehr.hotelbooking.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 
+import java.util.List;
+
 /**
  * Represents a hotel in the booking system.
  */
