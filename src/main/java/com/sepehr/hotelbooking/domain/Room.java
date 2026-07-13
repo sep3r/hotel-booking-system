@@ -1,7 +1,7 @@
 package com.sepehr.hotelbooking.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.*;
 
 @Entity
 @Table(name = "room")
@@ -19,9 +19,16 @@ public class Room {
     )
     private Long id;
 
+
     @NotBlank(message = "Room number is required.")
-    @Column(nullable = false)
+    @Size(max = 20, message = "Room number must not exceed 20 characters.")
+    @Column(
+            name = "room_number",
+            nullable = false,
+            length = 20
+    )
     private String roomNumber;
+
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
@@ -30,23 +37,7 @@ public class Room {
     )
     private Hotel hotel;
 
+
     protected Room() {
-    }
-
-    public Room(String roomNumber, Hotel hotel) {
-        this.roomNumber = roomNumber;
-        this.hotel = hotel;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public Hotel getHotel() {
-        return hotel;
     }
 }
