@@ -12,6 +12,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+
 @Entity
 @Table(
         name = "payment",
@@ -23,6 +24,7 @@ import java.time.LocalDateTime;
         }
 )
 public class Payment {
+
 
     @Id
     @GeneratedValue(
@@ -37,13 +39,18 @@ public class Payment {
     )
     private Long id;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
+
+    @OneToOne(
+            fetch = FetchType.LAZY,
+            optional = false
+    )
     @JoinColumn(
             name = "booking_id",
             nullable = false,
             unique = true
     )
     private Booking booking;
+
 
     @NotNull(message = "Payment amount is required.")
     @Column(
@@ -53,6 +60,7 @@ public class Payment {
     )
     private BigDecimal amount;
 
+
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false,
@@ -60,11 +68,13 @@ public class Payment {
     )
     private PaymentStatus status;
 
+
     @Column(
             name = "transaction_id",
             length = 100
     )
     private String transactionId;
+
 
     @Column(
             name = "created_at",
@@ -73,22 +83,24 @@ public class Payment {
     )
     private LocalDateTime createdAt;
 
+
     @Column(
             name = "paid_at"
     )
     private LocalDateTime paidAt;
 
+
     public Payment(
             Booking booking,
             BigDecimal amount
-    )
+    ) {
 
-    {
         this.booking = booking;
         this.amount = amount;
         this.status = PaymentStatus.PENDING;
         this.createdAt = LocalDateTime.now();
     }
+
 
     public void markAsSuccessful(String transactionId) {
 
@@ -97,10 +109,12 @@ public class Payment {
         this.paidAt = LocalDateTime.now();
     }
 
+
     public void markAsFailed() {
 
         this.status = PaymentStatus.FAILED;
     }
+
 
     public void refund() {
 

@@ -2,9 +2,15 @@ package com.sepehr.hotelbooking.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
 @Table(
@@ -60,7 +66,9 @@ public class User {
 
 
     @NotBlank(message = "Email is required.")
-    @Email(message = "Invalid email format.")
+    @Email(
+            message = "Invalid email format."
+    )
     @Size(
             max = 150,
             message = "Email must not exceed 150 characters."
@@ -90,6 +98,10 @@ public class User {
             max = 20,
             message = "Phone number must not exceed 20 characters."
     )
+    @Pattern(
+            regexp = "^\\+?[0-9]{10,15}$",
+            message = "Invalid phone number format."
+    )
     @Column(
             name = "phone_number",
             nullable = false,
@@ -114,10 +126,6 @@ public class User {
     private LocalDateTime createdAt;
 
 
-    protected User() {
-    }
-
-
     public User(
             String firstName,
             String lastName,
@@ -126,6 +134,7 @@ public class User {
             String phoneNumber,
             Role role
     ) {
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -136,17 +145,14 @@ public class User {
     }
 
 
-    public Long getId() {
-        return id;
+    public void changePassword(String encodedPassword) {
+
+        this.password = encodedPassword;
     }
 
 
-    public String getEmail() {
-        return email;
-    }
+    public void changeRole(Role role) {
 
-
-    public Role getRole() {
-        return role;
+        this.role = role;
     }
 }

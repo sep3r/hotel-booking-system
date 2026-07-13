@@ -18,6 +18,7 @@ import java.time.LocalDateTime;
 @Table(name = "booking")
 public class Booking {
 
+
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -31,19 +32,28 @@ public class Booking {
     )
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            optional = false
+    )
     @JoinColumn(
             name = "user_id",
             nullable = false
     )
     private User user;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            optional = false
+    )
     @JoinColumn(
             name = "room_id",
             nullable = false
     )
     private Room room;
+
 
     @NotNull(message = "Check-in date is required.")
     @Column(
@@ -52,12 +62,14 @@ public class Booking {
     )
     private LocalDate checkInDate;
 
+
     @NotNull(message = "Check-out date is required.")
     @Column(
             name = "check_out_date",
             nullable = false
     )
     private LocalDate checkOutDate;
+
 
     @NotNull(message = "Total price is required.")
     @Column(
@@ -68,12 +80,14 @@ public class Booking {
     )
     private BigDecimal totalPrice;
 
+
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false,
             length = 30
     )
     private BookingStatus status;
+
 
     @Column(
             name = "created_at",
@@ -82,6 +96,7 @@ public class Booking {
     )
     private LocalDateTime createdAt;
 
+
     public Booking(
             User user,
             Room room,
@@ -89,6 +104,7 @@ public class Booking {
             LocalDate checkOutDate,
             BigDecimal totalPrice
     ) {
+
         this.user = user;
         this.room = room;
         this.checkInDate = checkInDate;
@@ -96,5 +112,23 @@ public class Booking {
         this.totalPrice = totalPrice;
         this.status = BookingStatus.PENDING;
         this.createdAt = LocalDateTime.now();
+    }
+
+
+    public void confirm() {
+
+        this.status = BookingStatus.CONFIRMED;
+    }
+
+
+    public void cancel() {
+
+        this.status = BookingStatus.CANCELLED;
+    }
+
+
+    public void complete() {
+
+        this.status = BookingStatus.COMPLETED;
     }
 }

@@ -1,11 +1,20 @@
 package com.sepehr.hotelbooking.domain;
 
 import jakarta.persistence.*;
-import jakarta.validation.constraints.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 
 @Entity
 @Table(name = "room")
 public class Room {
+
 
     @Id
     @GeneratedValue(
@@ -15,12 +24,17 @@ public class Room {
     @SequenceGenerator(
             name = "room_seq_generator",
             sequenceName = "room_seq",
-            allocationSize = 50
+            allocationSize = 50,
+            initialValue = 1
     )
     private Long id;
 
+
     @NotBlank(message = "Room number is required.")
-    @Size(max = 20, message = "Room number must not exceed 20 characters.")
+    @Size(
+            max = 20,
+            message = "Room number must not exceed 20 characters."
+    )
     @Column(
             name = "room_number",
             nullable = false,
@@ -28,13 +42,23 @@ public class Room {
     )
     private String roomNumber;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+
+    @ManyToOne(
+            fetch = FetchType.LAZY,
+            optional = false
+    )
     @JoinColumn(
             name = "hotel_id",
             nullable = false
     )
     private Hotel hotel;
 
-    protected Room() {
+
+    public Room(
+            String roomNumber,
+            Hotel hotel
+    ) {
+        this.roomNumber = roomNumber;
+        this.hotel = hotel;
     }
 }
