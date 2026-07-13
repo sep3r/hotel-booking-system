@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Table(name = "booking")
 public class Booking {
 
-
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,
@@ -32,14 +31,12 @@ public class Booking {
     )
     private Long id;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
             name = "user_id",
             nullable = false
     )
     private User user;
-
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
@@ -48,7 +45,6 @@ public class Booking {
     )
     private Room room;
 
-
     @NotNull(message = "Check-in date is required.")
     @Column(
             name = "check_in_date",
@@ -56,14 +52,12 @@ public class Booking {
     )
     private LocalDate checkInDate;
 
-
     @NotNull(message = "Check-out date is required.")
     @Column(
             name = "check_out_date",
             nullable = false
     )
     private LocalDate checkOutDate;
-
 
     @NotNull(message = "Total price is required.")
     @Column(
@@ -74,7 +68,6 @@ public class Booking {
     )
     private BigDecimal totalPrice;
 
-
     @Enumerated(EnumType.STRING)
     @Column(
             nullable = false,
@@ -82,14 +75,12 @@ public class Booking {
     )
     private BookingStatus status;
 
-
     @Column(
             name = "created_at",
             nullable = false,
             updatable = false
     )
     private LocalDateTime createdAt;
-
 
     public Booking(
             User user,

@@ -19,7 +19,6 @@ public class Room {
     )
     private Long id;
 
-
     @NotBlank(message = "Room number is required.")
     @Size(max = 20, message = "Room number must not exceed 20 characters.")
     @Column(
@@ -29,14 +28,12 @@ public class Room {
     )
     private String roomNumber;
 
-
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(
             name = "hotel_id",
             nullable = false
     )
     private Hotel hotel;
-
 
     protected Room() {
     }
