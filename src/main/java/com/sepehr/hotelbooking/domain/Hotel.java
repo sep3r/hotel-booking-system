@@ -23,17 +23,13 @@ public class Hotel {
     @SequenceGenerator(
             name = "hotel_seq_generator",
             sequenceName = "hotel_seq",
-            allocationSize = 50,
-            initialValue = 1
+            allocationSize = 50
     )
     private Long id;
 
 
     @NotBlank(message = "Hotel name is required.")
-    @Size(
-            max = 100,
-            message = "Hotel name must not exceed 100 characters."
-    )
+    @Size(max = 100)
     @Column(
             name = "hotel_name",
             nullable = false,
@@ -43,10 +39,7 @@ public class Hotel {
 
 
     @NotBlank(message = "City is required.")
-    @Size(
-            max = 100,
-            message = "City must not exceed 100 characters."
-    )
+    @Size(max = 100)
     @Column(
             nullable = false,
             length = 100
@@ -55,10 +48,7 @@ public class Hotel {
 
 
     @NotBlank(message = "Address is required.")
-    @Size(
-            max = 300,
-            message = "Address must not exceed 300 characters."
-    )
+    @Size(max = 300)
     @Column(
             nullable = false,
             length = 300
@@ -66,15 +56,13 @@ public class Hotel {
     private String address;
 
 
-    @NotNull(message = "Star rating is required.")
-    @Min(
-            value = 1,
-            message = "Minimum star rating is 1."
-    )
-    @Max(
-            value = 5,
-            message = "Maximum star rating is 5."
-    )
+    @Size(max = 500)
+    @Column(length = 500)
+    private String description;
+
+
+    @Min(1)
+    @Max(5)
     @Column(
             name = "star_rating",
             nullable = false
@@ -83,14 +71,7 @@ public class Hotel {
 
 
     @NotBlank(message = "Phone number is required.")
-    @Size(
-            max = 20,
-            message = "Phone number must not exceed 20 characters."
-    )
-    @Pattern(
-            regexp = "^\\+?[0-9]{10,15}$",
-            message = "Invalid phone number format."
-    )
+    @Size(max = 20)
     @Column(
             name = "phone_number",
             nullable = false,
@@ -103,12 +84,15 @@ public class Hotel {
             String hotelName,
             String city,
             String address,
+            String description,
             Integer starRating,
             String phoneNumber
     ) {
+
         this.hotelName = hotelName;
         this.city = city;
         this.address = address;
+        this.description = description;
         this.starRating = starRating;
         this.phoneNumber = phoneNumber;
     }
