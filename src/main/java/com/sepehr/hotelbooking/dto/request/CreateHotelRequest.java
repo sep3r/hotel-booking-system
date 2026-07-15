@@ -1,7 +1,12 @@
 package com.sepehr.hotelbooking.dto.request;
 
 import jakarta.validation.constraints.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class CreateHotelRequest {
 
     @NotBlank(message = "Hotel name is required.")
@@ -31,4 +36,7 @@ public class CreateHotelRequest {
     @NotBlank(message = "Phone number is required.")
     @Size(max = 20, message = "Phone number must not exceed 20 characters.")
     private String phoneNumber;
+
+    @Size(max = 500)
+    private String description;
 }
