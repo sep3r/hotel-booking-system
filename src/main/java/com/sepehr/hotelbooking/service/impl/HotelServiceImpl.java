@@ -2,6 +2,7 @@ package com.sepehr.hotelbooking.service.impl;
 
 import com.sepehr.hotelbooking.domain.Hotel;
 import com.sepehr.hotelbooking.dto.request.CreateHotelRequest;
+import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 import com.sepehr.hotelbooking.repository.HotelRepository;
 import com.sepehr.hotelbooking.service.HotelService;
 
@@ -43,7 +44,7 @@ public class HotelServiceImpl implements HotelService {
 
         return hotelRepository.findById(id)
                 .orElseThrow(
-                        () -> new RuntimeException(
+                        () -> new ResourceNotFoundException(
                                 "Hotel not found with id: " + id
                         )
                 );
