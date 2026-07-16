@@ -25,4 +25,34 @@ public class GlobalExceptionHandler {
                 .status(HttpStatus.NOT_FOUND)
                 .body(response);
     }
+
+    @ExceptionHandler(BookingConflictException.class)
+    public ResponseEntity<ErrorResponse> handleBookingConflict(
+            BookingConflictException exception
+    ) {
+
+        ErrorResponse response = new ErrorResponse(
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
+
+    @ExceptionHandler(InvalidBookingDateException.class)
+    public ResponseEntity<ErrorResponse> handleInvalidBookingDate(
+            InvalidBookingDateException exception
+    ) {
+
+        ErrorResponse response = new ErrorResponse(
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(response);
+    }
 }

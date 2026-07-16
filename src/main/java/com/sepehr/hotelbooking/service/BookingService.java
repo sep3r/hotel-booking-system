@@ -19,4 +19,5 @@ public interface BookingService {
 
 
     void cancelBooking(Long id);
+
 }
