@@ -1,18 +1,27 @@
 package com.sepehr.hotelbooking.dto.request;
 
+
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
 
 import java.time.LocalDate;
 
 
+@Getter
+@NoArgsConstructor
 public class CreateBookingRequest {
 
 
     @NotNull(message = "User id is required.")
+    @Positive(message = "User id must be positive.")
     private Long userId;
 
 
     @NotNull(message = "Room id is required.")
+    @Positive(message = "Room id must be positive.")
     private Long roomId;
 
 
@@ -22,25 +31,4 @@ public class CreateBookingRequest {
 
     @NotNull(message = "Check-out date is required.")
     private LocalDate checkOutDate;
-
-
-
-    public Long getUserId() {
-        return userId;
-    }
-
-
-    public Long getRoomId() {
-        return roomId;
-    }
-
-
-    public LocalDate getCheckInDate() {
-        return checkInDate;
-    }
-
-
-    public LocalDate getCheckOutDate() {
-        return checkOutDate;
-    }
 }
