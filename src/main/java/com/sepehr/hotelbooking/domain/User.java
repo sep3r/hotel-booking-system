@@ -5,6 +5,7 @@ import jakarta.validation.constraints.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -123,6 +124,7 @@ public class User {
             nullable = false,
             updatable = false
     )
+    @CreationTimestamp
     private LocalDateTime createdAt;
 
 
@@ -130,14 +132,17 @@ public class User {
             String firstName,
             String lastName,
             String email,
-            String password
+            String password,
+            String phoneNumber
     ) {
 
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
+        this.phoneNumber = phoneNumber;
         this.role = Role.CUSTOMER;
+        this.createdAt = LocalDateTime.now();
     }
 
 
