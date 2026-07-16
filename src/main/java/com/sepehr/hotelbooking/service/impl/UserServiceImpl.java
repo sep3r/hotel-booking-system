@@ -36,7 +36,6 @@ public class UserServiceImpl implements UserService {
                 request.getPassword()
         );
 
-
         return userRepository.save(user);
     }
 

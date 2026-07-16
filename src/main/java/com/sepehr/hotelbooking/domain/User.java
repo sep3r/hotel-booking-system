@@ -130,18 +130,14 @@ public class User {
             String firstName,
             String lastName,
             String email,
-            String password,
-            String phoneNumber,
-            Role role
+            String password
     ) {
 
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
         this.password = password;
-        this.phoneNumber = phoneNumber;
-        this.role = role;
-        this.createdAt = LocalDateTime.now();
+        this.role = Role.CUSTOMER;
     }
 
 
