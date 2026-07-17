@@ -1,7 +1,6 @@
 package com.sepehr.hotelbooking.controller;
 
 
-import com.sepehr.hotelbooking.domain.User;
 import com.sepehr.hotelbooking.dto.request.CreateUserRequest;
 import com.sepehr.hotelbooking.dto.response.UserResponse;
 import com.sepehr.hotelbooking.service.UserService;
@@ -40,11 +39,11 @@ public class UserController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(
+    public ResponseEntity<UserResponse> getUserById(
             @PathVariable Long id
     ) {
 
-        User user = userService.getUserById(id);
+        UserResponse user = userService.getUserById(id);
 
         return ResponseEntity
                 .ok(user);
@@ -52,7 +51,7 @@ public class UserController {
 
 
     @GetMapping
-    public ResponseEntity<List<User>> getAllUsers() {
+    public ResponseEntity<List<UserResponse>> getAllUsers() {
 
         return ResponseEntity
                 .ok(

@@ -27,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public UserResponse createUser(CreateUserRequest request){
+    public UserResponse createUser(CreateUserRequest request) {
 
 
         User user = new User(
@@ -38,6 +38,60 @@ public class UserServiceImpl implements UserService {
                 request.getPhoneNumber()
         );
 
+
+        User savedUser = userRepository.save(user);
+
+
+        return mapToResponse(savedUser);
+    }
+
+
+    @Override
+    public UserResponse getUserById(Long id) {
+
+
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "User not found with id: " + id
+                        )
+                );
+
+
+        return mapToResponse(user);
+    }
+
+
+    @Override
+    public List<UserResponse> getAllUsers() {
+
+
+        return userRepository.findAllByOrderByCreatedAtDesc()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
+    }
+
+
+    @Override
+    @Transactional
+    public void deleteUser(Long id) {
+
+
+        User user = userRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "User not found with id: " + id
+                        )
+                );
+
+
+        userRepository.delete(user);
+    }
+
+
+    private UserResponse mapToResponse(User user) {
+
         return new UserResponse(
                 user.getId(),
                 user.getFirstName(),
@@ -46,46 +100,5 @@ public class UserServiceImpl implements UserService {
                 user.getPhoneNumber(),
                 user.getRole()
         );
-    }
-
-
-    @Override
-    public User getUserById(Long id) {
-
-        return userRepository.findById(id)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException(
-                                "User not found with id: " + id
-                        )
-                );
-    }
-
-
-    @Override
-    public User getUserByEmail(String email) {
-
-        return userRepository.findByEmail(email)
-                .orElseThrow(
-                        () -> new ResourceNotFoundException(
-                                "User not found with email: " + email
-                        )
-                );
-    }
-
-
-    @Override
-    public List<User> getAllUsers() {
-
-        return userRepository.findAll();
-    }
-
-
-    @Override
-    @Transactional
-    public void deleteUser(Long id) {
-
-        User user = getUserById(id);
-
-        userRepository.delete(user);
     }
 }

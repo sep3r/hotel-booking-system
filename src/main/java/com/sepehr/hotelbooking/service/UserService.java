@@ -1,6 +1,6 @@
 package com.sepehr.hotelbooking.service;
 
-import com.sepehr.hotelbooking.domain.User;
+
 import com.sepehr.hotelbooking.dto.request.CreateUserRequest;
 import com.sepehr.hotelbooking.dto.response.UserResponse;
 
@@ -13,13 +13,10 @@ public interface UserService {
     UserResponse createUser(CreateUserRequest request);
 
 
-    User getUserById(Long id);
+    UserResponse getUserById(Long id);
 
 
-    User getUserByEmail(String email);
-
-
-    List<User> getAllUsers();
+    List<UserResponse> getAllUsers();
 
 
     void deleteUser(Long id);
