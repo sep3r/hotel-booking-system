@@ -2,9 +2,11 @@ package com.sepehr.hotelbooking.dto.request;
 
 import jakarta.validation.constraints.*;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
+@NoArgsConstructor
 public class CreateUserRequest {
 
 
