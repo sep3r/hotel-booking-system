@@ -10,5 +10,4 @@ public interface PaymentRepository
 
 
     boolean existsByBookingId(Long bookingId);
-
 }

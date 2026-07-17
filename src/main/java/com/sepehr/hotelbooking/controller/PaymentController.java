@@ -1,7 +1,7 @@
 package com.sepehr.hotelbooking.controller;
 
 
-import com.sepehr.hotelbooking.domain.Payment;
+import com.sepehr.hotelbooking.dto.response.PaymentResponse;
 import com.sepehr.hotelbooking.service.PaymentService;
 
 import lombok.RequiredArgsConstructor;
@@ -21,84 +21,70 @@ public class PaymentController {
 
 
     @PostMapping("/booking/{bookingId}")
-    public ResponseEntity<Payment> createPayment(
+    public ResponseEntity<PaymentResponse> createPayment(
             @PathVariable Long bookingId
     ) {
 
-
-        Payment payment =
+        PaymentResponse response =
                 paymentService.createPayment(bookingId);
-
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(payment);
+                .body(response);
     }
-
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Payment> getPaymentById(
+    public ResponseEntity<PaymentResponse> getPaymentById(
             @PathVariable Long id
     ) {
 
-
-        Payment payment =
-                paymentService.getPaymentById(id);
-
-
         return ResponseEntity
-                .ok(payment);
+                .ok(
+                        paymentService.getPaymentById(id)
+                );
     }
 
 
-
-    @PatchMapping("/{id}/success")
-    public ResponseEntity<Void> processSuccessfulPayment(
+    @PutMapping("/{id}/success")
+    public ResponseEntity<Void> successfulPayment(
             @PathVariable Long id,
             @RequestParam String transactionId
     ) {
-
 
         paymentService.processSuccessfulPayment(
                 id,
                 transactionId
         );
 
-
         return ResponseEntity
-                .ok()
+                .noContent()
                 .build();
     }
 
 
-
-    @PatchMapping("/{id}/failed")
-    public ResponseEntity<Void> processFailedPayment(
+    @PutMapping("/{id}/failed")
+    public ResponseEntity<Void> failedPayment(
             @PathVariable Long id
     ) {
 
-
         paymentService.processFailedPayment(id);
 
-
         return ResponseEntity
-                .ok()
+                .noContent()
                 .build();
     }
 
 
-
-    @PatchMapping("/{id}/refund")
+    @PutMapping("/{id}/refund")
     public ResponseEntity<Void> refundPayment(
             @PathVariable Long id
     ) {
 
         paymentService.refundPayment(id);
 
-
         return ResponseEntity
-                .ok()
+                .noContent()
                 .build();
     }
 }

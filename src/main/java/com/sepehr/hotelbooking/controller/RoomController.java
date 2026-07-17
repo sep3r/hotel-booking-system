@@ -1,8 +1,7 @@
 package com.sepehr.hotelbooking.controller;
 
-
-import com.sepehr.hotelbooking.domain.Room;
 import com.sepehr.hotelbooking.dto.request.CreateRoomRequest;
+import com.sepehr.hotelbooking.dto.response.RoomResponse;
 import com.sepehr.hotelbooking.service.RoomService;
 
 import jakarta.validation.Valid;
@@ -26,32 +25,32 @@ public class RoomController {
 
 
     @PostMapping
-    public ResponseEntity<Room> createRoom(
+    public ResponseEntity<RoomResponse> createRoom(
             @Valid @RequestBody CreateRoomRequest request
     ) {
 
-        Room room = roomService.createRoom(request);
+        RoomResponse response = roomService.createRoom(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(room);
+                .body(response);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Room> getRoomById(
+    public ResponseEntity<RoomResponse> getRoomById(
             @PathVariable Long id
     ) {
 
-        Room room = roomService.getRoomById(id);
-
         return ResponseEntity
-                .ok(room);
+                .ok(
+                        roomService.getRoomById(id)
+                );
     }
 
 
     @GetMapping
-    public ResponseEntity<List<Room>> getAllRooms() {
+    public ResponseEntity<List<RoomResponse>> getAllRooms() {
 
         return ResponseEntity
                 .ok(

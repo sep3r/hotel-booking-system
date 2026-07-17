@@ -3,6 +3,7 @@ package com.sepehr.hotelbooking.service.impl;
 import com.sepehr.hotelbooking.domain.Hotel;
 import com.sepehr.hotelbooking.domain.Room;
 import com.sepehr.hotelbooking.dto.request.CreateRoomRequest;
+import com.sepehr.hotelbooking.dto.response.RoomResponse;
 import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 import com.sepehr.hotelbooking.repository.HotelRepository;
 import com.sepehr.hotelbooking.repository.RoomRepository;
@@ -29,8 +30,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     @Transactional
-    public Room createRoom(CreateRoomRequest request) {
-
+    public RoomResponse createRoom(CreateRoomRequest request) {
 
         Hotel hotel = hotelRepository.findById(request.getHotelId())
                 .orElseThrow(
@@ -49,26 +49,37 @@ public class RoomServiceImpl implements RoomService {
         );
 
 
-        return roomRepository.save(room);
+        Room savedRoom = roomRepository.save(room);
+
+
+        return mapToResponse(savedRoom);
     }
 
 
     @Override
-    public Room getRoomById(Long id) {
+    public RoomResponse getRoomById(Long id) {
 
-        return roomRepository.findById(id)
+
+        Room room = roomRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 "Room not found with id: " + id
                         )
                 );
+
+
+        return mapToResponse(room);
     }
 
 
     @Override
-    public List<Room> getAllRooms() {
+    public List<RoomResponse> getAllRooms() {
 
-        return roomRepository.findAll();
+
+        return roomRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
 
@@ -76,8 +87,29 @@ public class RoomServiceImpl implements RoomService {
     @Transactional
     public void deleteRoom(Long id) {
 
-        Room room = getRoomById(id);
+
+        Room room = roomRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Room not found with id: " + id
+                        )
+                );
+
 
         roomRepository.delete(room);
+    }
+
+
+    private RoomResponse mapToResponse(Room room) {
+
+
+        return new RoomResponse(
+                room.getId(),
+                room.getRoomNumber(),
+                room.getRoomType(),
+                room.getPricePerNight(),
+                room.getStatus(),
+                room.getHotel().getId()
+        );
     }
 }

@@ -1,8 +1,8 @@
 package com.sepehr.hotelbooking.controller;
 
 
-import com.sepehr.hotelbooking.domain.Booking;
 import com.sepehr.hotelbooking.dto.request.CreateBookingRequest;
+import com.sepehr.hotelbooking.dto.response.BookingResponse;
 import com.sepehr.hotelbooking.service.BookingService;
 
 import jakarta.validation.Valid;
@@ -26,37 +26,33 @@ public class BookingController {
 
 
     @PostMapping
-    public ResponseEntity<Booking> createBooking(
+    public ResponseEntity<BookingResponse> createBooking(
             @Valid @RequestBody CreateBookingRequest request
     ) {
 
-
-        Booking booking = bookingService.createBooking(request);
-
+        BookingResponse response =
+                bookingService.createBooking(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
-                .body(booking);
+                .body(response);
     }
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Booking> getBookingById(
+    public ResponseEntity<BookingResponse> getBookingById(
             @PathVariable Long id
     ) {
 
-
-        Booking booking = bookingService.getBookingById(id);
-
-
         return ResponseEntity
-                .ok(booking);
+                .ok(
+                        bookingService.getBookingById(id)
+                );
     }
 
 
     @GetMapping
-    public ResponseEntity<List<Booking>> getAllBookings() {
-
+    public ResponseEntity<List<BookingResponse>> getAllBookings() {
 
         return ResponseEntity
                 .ok(
@@ -65,14 +61,12 @@ public class BookingController {
     }
 
 
-    @DeleteMapping("/{id}")
+    @PutMapping("/{id}/cancel")
     public ResponseEntity<Void> cancelBooking(
             @PathVariable Long id
     ) {
 
-
         bookingService.cancelBooking(id);
-
 
         return ResponseEntity
                 .noContent()
