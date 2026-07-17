@@ -2,10 +2,13 @@ package com.sepehr.hotelbooking.dto.request;
 
 import com.sepehr.hotelbooking.domain.RoomType;
 import jakarta.validation.constraints.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 
-
+@Getter
+@NoArgsConstructor
 public class CreateRoomRequest {
 
 
@@ -32,21 +35,4 @@ public class CreateRoomRequest {
 
     @NotNull(message = "Hotel id is required.")
     private Long hotelId;
-
-
-    public String getRoomNumber() {
-        return roomNumber;
-    }
-
-    public RoomType getRoomType() {
-        return roomType;
-    }
-
-    public BigDecimal getPricePerNight() {
-        return pricePerNight;
-    }
-
-    public Long getHotelId() {
-        return hotelId;
-    }
 }
