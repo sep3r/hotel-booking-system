@@ -3,6 +3,7 @@ package com.sepehr.hotelbooking.controller;
 
 import com.sepehr.hotelbooking.domain.User;
 import com.sepehr.hotelbooking.dto.request.CreateUserRequest;
+import com.sepehr.hotelbooking.dto.response.UserResponse;
 import com.sepehr.hotelbooking.service.UserService;
 
 import jakarta.validation.Valid;
@@ -26,11 +27,11 @@ public class UserController {
 
 
     @PostMapping
-    public ResponseEntity<User> createUser(
+    public ResponseEntity<UserResponse> createUser(
             @Valid @RequestBody CreateUserRequest request
     ) {
 
-        User user = userService.createUser(request);
+        UserResponse user = userService.createUser(request);
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)

@@ -1,7 +1,10 @@
 package com.sepehr.hotelbooking.dto.request;
 
 import jakarta.validation.constraints.*;
+import lombok.Getter;
 
+
+@Getter
 public class CreateUserRequest {
 
 
@@ -32,29 +35,4 @@ public class CreateUserRequest {
             message = "Invalid phone number format."
     )
     private String phoneNumber;
-
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-
-    public String getLastName() {
-        return lastName;
-    }
-
-
-    public String getEmail() {
-        return email;
-    }
-
-
-    public String getPassword() {
-        return password;
-    }
-
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
 }

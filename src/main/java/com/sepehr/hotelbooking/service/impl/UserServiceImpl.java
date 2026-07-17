@@ -3,6 +3,7 @@ package com.sepehr.hotelbooking.service.impl;
 
 import com.sepehr.hotelbooking.domain.User;
 import com.sepehr.hotelbooking.dto.request.CreateUserRequest;
+import com.sepehr.hotelbooking.dto.response.UserResponse;
 import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 import com.sepehr.hotelbooking.repository.UserRepository;
 import com.sepehr.hotelbooking.service.UserService;
@@ -26,7 +27,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public User createUser(CreateUserRequest request) {
+    public UserResponse createUser(CreateUserRequest request){
 
 
         User user = new User(
@@ -37,7 +38,14 @@ public class UserServiceImpl implements UserService {
                 request.getPhoneNumber()
         );
 
-        return userRepository.save(user);
+        return new UserResponse(
+                user.getId(),
+                user.getFirstName(),
+                user.getLastName(),
+                user.getEmail(),
+                user.getPhoneNumber(),
+                user.getRole()
+        );
     }
 
 

@@ -1,11 +1,12 @@
 package com.sepehr.hotelbooking.domain;
 
+
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
+
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -40,11 +41,7 @@ public class User {
     private Long id;
 
 
-    @NotBlank(message = "First name is required.")
-    @Size(
-            max = 50,
-            message = "First name must not exceed 50 characters."
-    )
+    @NotBlank
     @Column(
             name = "first_name",
             nullable = false,
@@ -53,11 +50,7 @@ public class User {
     private String firstName;
 
 
-    @NotBlank(message = "Last name is required.")
-    @Size(
-            max = 50,
-            message = "Last name must not exceed 50 characters."
-    )
+    @NotBlank
     @Column(
             name = "last_name",
             nullable = false,
@@ -66,14 +59,8 @@ public class User {
     private String lastName;
 
 
-    @NotBlank(message = "Email is required.")
-    @Email(
-            message = "Invalid email format."
-    )
-    @Size(
-            max = 150,
-            message = "Email must not exceed 150 characters."
-    )
+    @NotBlank
+    @Email
     @Column(
             nullable = false,
             length = 150
@@ -81,12 +68,7 @@ public class User {
     private String email;
 
 
-    @NotBlank(message = "Password is required.")
-    @Size(
-            min = 8,
-            max = 100,
-            message = "Password must be between 8 and 100 characters."
-    )
+    @NotBlank
     @Column(
             nullable = false,
             length = 100
@@ -94,15 +76,7 @@ public class User {
     private String password;
 
 
-    @NotBlank(message = "Phone number is required.")
-    @Size(
-            max = 20,
-            message = "Phone number must not exceed 20 characters."
-    )
-    @Pattern(
-            regexp = "^\\+?[0-9]{10,15}$",
-            message = "Invalid phone number format."
-    )
+    @NotBlank
     @Column(
             name = "phone_number",
             nullable = false,
@@ -124,7 +98,6 @@ public class User {
             nullable = false,
             updatable = false
     )
-    @CreationTimestamp
     private LocalDateTime createdAt;
 
 

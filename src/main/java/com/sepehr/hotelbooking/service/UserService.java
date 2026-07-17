@@ -2,6 +2,7 @@ package com.sepehr.hotelbooking.service;
 
 import com.sepehr.hotelbooking.domain.User;
 import com.sepehr.hotelbooking.dto.request.CreateUserRequest;
+import com.sepehr.hotelbooking.dto.response.UserResponse;
 
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
 public interface UserService {
 
 
-    User createUser(CreateUserRequest request);
+    UserResponse createUser(CreateUserRequest request);
 
 
     User getUserById(Long id);
