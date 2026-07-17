@@ -1,7 +1,9 @@
 package com.sepehr.hotelbooking.service.impl;
 
+
 import com.sepehr.hotelbooking.domain.Hotel;
 import com.sepehr.hotelbooking.dto.request.CreateHotelRequest;
+import com.sepehr.hotelbooking.dto.response.HotelResponse;
 import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 import com.sepehr.hotelbooking.repository.HotelRepository;
 import com.sepehr.hotelbooking.service.HotelService;
@@ -25,7 +27,8 @@ public class HotelServiceImpl implements HotelService {
 
     @Override
     @Transactional
-    public Hotel createHotel(CreateHotelRequest request) {
+    public HotelResponse createHotel(CreateHotelRequest request) {
+
 
         Hotel hotel = new Hotel(
                 request.getHotelName(),
@@ -35,26 +38,39 @@ public class HotelServiceImpl implements HotelService {
                 request.getStarRating(),
                 request.getPhoneNumber()
         );
-        return hotelRepository.save(hotel);
+
+
+        Hotel savedHotel = hotelRepository.save(hotel);
+
+
+        return mapToResponse(savedHotel);
     }
 
 
     @Override
-    public Hotel getHotelById(Long id) {
+    public HotelResponse getHotelById(Long id) {
 
-        return hotelRepository.findById(id)
+
+        Hotel hotel = hotelRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 "Hotel not found with id: " + id
                         )
                 );
+
+
+        return mapToResponse(hotel);
     }
 
 
     @Override
-    public List<Hotel> getAllHotels() {
+    public List<HotelResponse> getAllHotels() {
 
-        return hotelRepository.findAll();
+
+        return hotelRepository.findAll()
+                .stream()
+                .map(this::mapToResponse)
+                .toList();
     }
 
 
@@ -62,8 +78,30 @@ public class HotelServiceImpl implements HotelService {
     @Transactional
     public void deleteHotel(Long id) {
 
-        Hotel hotel = getHotelById(id);
+
+        Hotel hotel = hotelRepository.findById(id)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "Hotel not found with id: " + id
+                        )
+                );
+
 
         hotelRepository.delete(hotel);
+    }
+
+
+    private HotelResponse mapToResponse(Hotel hotel) {
+
+
+        return new HotelResponse(
+                hotel.getId(),
+                hotel.getHotelName(),
+                hotel.getCity(),
+                hotel.getAddress(),
+                hotel.getDescription(),
+                hotel.getStarRating(),
+                hotel.getPhoneNumber()
+        );
     }
 }

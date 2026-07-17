@@ -2,19 +2,20 @@ package com.sepehr.hotelbooking.service;
 
 import com.sepehr.hotelbooking.dto.request.CreateHotelRequest;
 import com.sepehr.hotelbooking.domain.Hotel;
+import com.sepehr.hotelbooking.dto.response.HotelResponse;
 
 import java.util.List;
 
 public interface HotelService {
 
 
-    Hotel createHotel(CreateHotelRequest request);
+    HotelResponse createHotel(CreateHotelRequest request);
 
 
-    Hotel getHotelById(Long id);
+    HotelResponse getHotelById(Long id);
 
 
-    List<Hotel> getAllHotels();
+    List<HotelResponse> getAllHotels();
 
 
     void deleteHotel(Long id);

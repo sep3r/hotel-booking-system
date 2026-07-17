@@ -1,8 +1,8 @@
 package com.sepehr.hotelbooking.controller;
 
 
-import com.sepehr.hotelbooking.domain.Hotel;
 import com.sepehr.hotelbooking.dto.request.CreateHotelRequest;
+import com.sepehr.hotelbooking.dto.response.HotelResponse;
 import com.sepehr.hotelbooking.service.HotelService;
 
 import jakarta.validation.Valid;
@@ -26,11 +26,13 @@ public class HotelController {
 
 
     @PostMapping
-    public ResponseEntity<Hotel> createHotel(
+    public ResponseEntity<HotelResponse> createHotel(
             @Valid @RequestBody CreateHotelRequest request
     ) {
 
-        Hotel hotel = hotelService.createHotel(request);
+
+        HotelResponse hotel = hotelService.createHotel(request);
+
 
         return ResponseEntity
                 .status(HttpStatus.CREATED)
@@ -39,11 +41,13 @@ public class HotelController {
 
 
     @GetMapping("/{id}")
-    public ResponseEntity<Hotel> getHotelById(
+    public ResponseEntity<HotelResponse> getHotelById(
             @PathVariable Long id
     ) {
 
-        Hotel hotel = hotelService.getHotelById(id);
+
+        HotelResponse hotel = hotelService.getHotelById(id);
+
 
         return ResponseEntity
                 .ok(hotel);
@@ -51,7 +55,8 @@ public class HotelController {
 
 
     @GetMapping
-    public ResponseEntity<List<Hotel>> getAllHotels() {
+    public ResponseEntity<List<HotelResponse>> getAllHotels() {
+
 
         return ResponseEntity
                 .ok(
@@ -65,7 +70,9 @@ public class HotelController {
             @PathVariable Long id
     ) {
 
+
         hotelService.deleteHotel(id);
+
 
         return ResponseEntity
                 .noContent()
