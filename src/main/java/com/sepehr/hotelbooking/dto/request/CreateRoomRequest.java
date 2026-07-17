@@ -35,4 +35,18 @@ public class CreateRoomRequest {
 
     @NotNull(message = "Hotel id is required.")
     private Long hotelId;
+
+
+    public CreateRoomRequest(
+            String roomNumber,
+            RoomType roomType,
+            BigDecimal pricePerNight,
+            Long hotelId
+    ) {
+
+        this.roomNumber = roomNumber;
+        this.roomType = roomType;
+        this.pricePerNight = pricePerNight;
+        this.hotelId = hotelId;
+    }
 }
