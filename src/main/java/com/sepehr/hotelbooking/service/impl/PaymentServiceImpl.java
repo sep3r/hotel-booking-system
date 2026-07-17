@@ -1,8 +1,8 @@
 package com.sepehr.hotelbooking.service.impl;
 
-
 import com.sepehr.hotelbooking.domain.Booking;
 import com.sepehr.hotelbooking.domain.Payment;
+import com.sepehr.hotelbooking.exception.PaymentAlreadyExistsException;
 import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 import com.sepehr.hotelbooking.repository.BookingRepository;
 import com.sepehr.hotelbooking.repository.PaymentRepository;
@@ -37,6 +37,15 @@ public class PaymentServiceImpl implements PaymentService {
                                         + bookingId
                         )
                 );
+
+
+        if (paymentRepository.existsByBookingId(bookingId)) {
+
+            throw new PaymentAlreadyExistsException(
+                    "Payment already exists for booking with id: "
+                            + bookingId
+            );
+        }
 
 
         Payment payment = new Payment(
@@ -74,6 +83,8 @@ public class PaymentServiceImpl implements PaymentService {
         Payment payment = getPaymentById(paymentId);
 
         payment.markAsSuccessful(transactionId);
+
+        payment.getBooking().confirm();
     }
 
 
