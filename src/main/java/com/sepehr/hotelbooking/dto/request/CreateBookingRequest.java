@@ -13,6 +13,7 @@ import java.time.LocalDate;
 
 @Getter
 @NoArgsConstructor
+@AllArgsConstructor
 public class CreateBookingRequest {
 
 
