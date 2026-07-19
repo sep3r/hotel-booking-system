@@ -37,7 +37,6 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-
 @WebMvcTest(BookingController.class)
 class BookingControllerTest {
 
@@ -46,18 +45,13 @@ class BookingControllerTest {
     private MockMvc mockMvc;
 
 
-
     private final ObjectMapper objectMapper =
             new ObjectMapper()
                     .registerModule(new JavaTimeModule());
 
 
-
     @MockitoBean
     private BookingService bookingService;
-
-
-
 
 
     @Test
@@ -76,11 +70,8 @@ class BookingControllerTest {
                 );
 
 
-
         when(bookingService.createBooking(any(CreateBookingRequest.class)))
                 .thenReturn(response);
-
-
 
 
         CreateBookingRequest request =
@@ -90,8 +81,6 @@ class BookingControllerTest {
                         LocalDate.of(2026, 8, 1),
                         LocalDate.of(2026, 8, 5)
                 );
-
-
 
 
         mockMvc.perform(
@@ -113,14 +102,8 @@ class BookingControllerTest {
     }
 
 
-
-
-
-
-
     @Test
     void shouldGetBookingByIdSuccessfully() throws Exception {
-
 
 
         BookingResponse response =
@@ -135,10 +118,8 @@ class BookingControllerTest {
                 );
 
 
-
         when(bookingService.getBookingById(1L))
                 .thenReturn(response);
-
 
 
         mockMvc.perform(
@@ -155,16 +136,8 @@ class BookingControllerTest {
 
     }
 
-
-
-
-
-
-
     @Test
     void shouldGetAllBookingsSuccessfully() throws Exception {
-
-
 
         BookingResponse response =
                 new BookingResponse(
@@ -178,11 +151,8 @@ class BookingControllerTest {
                 );
 
 
-
         when(bookingService.getAllBookings())
                 .thenReturn(List.of(response));
-
-
 
         mockMvc.perform(
                         get("/api/bookings")
@@ -198,17 +168,8 @@ class BookingControllerTest {
 
     }
 
-
-
-
-
-
-
-
     @Test
     void shouldCancelBookingSuccessfully() throws Exception {
-
-
 
         mockMvc.perform(
                         put("/api/bookings/1/cancel")
@@ -216,12 +177,8 @@ class BookingControllerTest {
 
                 .andExpect(status().isNoContent());
 
-
-
         verify(bookingService)
                 .cancelBooking(1L);
 
     }
-
-
 }
