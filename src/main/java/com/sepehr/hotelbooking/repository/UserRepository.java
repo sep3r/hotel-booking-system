@@ -14,5 +14,4 @@ public interface UserRepository
     List<User> findAllByOrderByCreatedAtDesc();
 
     Optional<User> findByEmail(String email);
-
 }

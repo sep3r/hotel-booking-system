@@ -1,5 +1,6 @@
 package com.sepehr.hotelbooking.service;
 
+
 import com.sepehr.hotelbooking.domain.User;
 import com.sepehr.hotelbooking.dto.request.CreateUserRequest;
 import com.sepehr.hotelbooking.dto.response.UserResponse;
@@ -13,6 +14,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 import java.util.Optional;
@@ -31,16 +34,23 @@ class UserServiceTest {
     @Mock
     private UserRepository userRepository;
 
+
+    @Mock
+    private PasswordEncoder passwordEncoder;
+
+
     @InjectMocks
     private UserServiceImpl userService;
 
 
     private User user;
 
+
     @BeforeEach
     void setup() {
 
         MockitoAnnotations.openMocks(this);
+
 
         user = new User(
                 "Sepehr",
@@ -51,6 +61,7 @@ class UserServiceTest {
         );
 
     }
+
 
     @Test
     void shouldCreateUserSuccessfully() {
@@ -64,6 +75,9 @@ class UserServiceTest {
                         "+989121234567"
                 );
 
+        when(passwordEncoder.encode("password123"))
+                .thenReturn("encodedPassword");
+
         when(userRepository.save(any(User.class)))
                 .thenReturn(user);
 
@@ -76,9 +90,11 @@ class UserServiceTest {
         assertThat(response.getEmail())
                 .isEqualTo("sepehr@test.com");
 
+        verify(passwordEncoder)
+                .encode("password123");
+
         verify(userRepository)
                 .save(any(User.class));
-
     }
 
     @Test
@@ -98,8 +114,8 @@ class UserServiceTest {
 
         verify(userRepository)
                 .findById(1L);
-
     }
+
 
     @Test
     void shouldThrowExceptionWhenUserNotFound() {
@@ -138,13 +154,16 @@ class UserServiceTest {
 
     }
 
+
     @Test
     void shouldDeleteUserSuccessfully() {
 
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user));
 
+
         userService.deleteUser(1L);
+
 
         verify(userRepository)
                 .delete(user);
@@ -161,6 +180,7 @@ class UserServiceTest {
                 () -> userService.deleteUser(99L)
         )
                 .isInstanceOf(ResourceNotFoundException.class);
+
 
         verify(userRepository, never())
                 .delete(any(User.class));

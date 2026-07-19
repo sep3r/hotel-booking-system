@@ -71,7 +71,7 @@ public class User {
     @NotBlank
     @Column(
             nullable = false,
-            length = 100
+            length = 255
     )
     private String password;
 
