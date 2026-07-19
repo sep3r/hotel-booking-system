@@ -6,6 +6,7 @@ import com.sepehr.hotelbooking.dto.request.LoginRequest;
 import com.sepehr.hotelbooking.dto.request.RegisterRequest;
 import com.sepehr.hotelbooking.dto.response.AuthResponse;
 import com.sepehr.hotelbooking.repository.UserRepository;
+import com.sepehr.hotelbooking.security.JwtService;
 import com.sepehr.hotelbooking.service.AuthService;
 import com.sepehr.hotelbooking.exception.EmailAlreadyExistsException;
 
@@ -32,6 +33,8 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
 
+    private final JwtService jwtService;
+
     @Override
     public AuthResponse register(RegisterRequest request) {
 
@@ -49,7 +52,7 @@ public class AuthServiceImpl implements AuthService {
         );
         userRepository.save(user);
         return new AuthResponse(
-                "REGISTER_SUCCESS"
+                jwtService.generateToken(request.email())
         );
     }
 
@@ -57,14 +60,17 @@ public class AuthServiceImpl implements AuthService {
     public AuthResponse login(LoginRequest request) {
 
         authenticationManager.authenticate(
-
                 new UsernamePasswordAuthenticationToken(
                         request.email(),
                         request.password()
                 )
         );
+        String token =
+                jwtService.generateToken(
+                        request.email()
+                );
         return new AuthResponse(
-                "LOGIN_SUCCESS"
+                token
         );
     }
 }

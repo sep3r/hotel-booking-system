@@ -6,6 +6,8 @@ import com.sepehr.hotelbooking.domain.RoomStatus;
 import com.sepehr.hotelbooking.domain.RoomType;
 import com.sepehr.hotelbooking.dto.request.CreateRoomRequest;
 import com.sepehr.hotelbooking.dto.response.RoomResponse;
+import com.sepehr.hotelbooking.security.CustomUserDetailsService;
+import com.sepehr.hotelbooking.security.JwtService;
 import com.sepehr.hotelbooking.service.RoomService;
 
 
@@ -13,6 +15,7 @@ import org.junit.jupiter.api.Test;
 
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -36,27 +39,23 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(RoomController.class)
 class RoomControllerTest {
 
+    @MockitoBean
+    private JwtService jwtService;
 
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private MockMvc mockMvc;
 
-
-
     private final ObjectMapper objectMapper = new ObjectMapper();
-
-
 
     @MockitoBean
     private RoomService roomService;
-
-
-
-
 
     @Test
     void shouldCreateRoomSuccessfully() throws Exception {

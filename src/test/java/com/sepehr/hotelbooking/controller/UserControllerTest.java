@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sepehr.hotelbooking.domain.Role;
 import com.sepehr.hotelbooking.dto.request.CreateUserRequest;
 import com.sepehr.hotelbooking.dto.response.UserResponse;
+import com.sepehr.hotelbooking.security.CustomUserDetailsService;
+import com.sepehr.hotelbooking.security.JwtService;
 import com.sepehr.hotelbooking.service.UserService;
 
 
@@ -15,6 +17,7 @@ import static org.mockito.Mockito.never;
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
@@ -31,9 +34,15 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 
-
+@AutoConfigureMockMvc(addFilters = false)
 @WebMvcTest(UserController.class)
 class UserControllerTest {
+
+    @MockitoBean
+    private JwtService jwtService;
+
+    @MockitoBean
+    private CustomUserDetailsService customUserDetailsService;
 
     @Autowired
     private MockMvc mockMvc;
