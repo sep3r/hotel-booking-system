@@ -65,7 +65,19 @@ public class GlobalExceptionHandler {
                 exception.getMessage(),
                 LocalDateTime.now()
         );
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(response);
+    }
 
+    @ExceptionHandler(EmailAlreadyExistsException.class)
+    public ResponseEntity<ErrorResponse> handleEmailAlreadyExists(
+            EmailAlreadyExistsException exception
+    ) {
+        ErrorResponse response = new ErrorResponse(
+                exception.getMessage(),
+                LocalDateTime.now()
+        );
         return ResponseEntity
                 .status(HttpStatus.CONFLICT)
                 .body(response);
