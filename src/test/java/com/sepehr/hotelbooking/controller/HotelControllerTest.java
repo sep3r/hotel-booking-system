@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import static org.mockito.Mockito.never;
+
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
@@ -20,6 +22,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 
@@ -29,22 +32,17 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(HotelController.class)
 class HotelControllerTest {
 
-
     @Autowired
     private MockMvc mockMvc;
-
 
     private final ObjectMapper objectMapper =
             new ObjectMapper();
 
-
     @MockitoBean
     private HotelService hotelService;
 
-
     @Test
     void shouldCreateHotelSuccessfully() throws Exception {
-
 
         HotelResponse response =
                 new HotelResponse(
@@ -57,10 +55,8 @@ class HotelControllerTest {
                         "+33123456789"
                 );
 
-
         when(hotelService.createHotel(any(CreateHotelRequest.class)))
                 .thenReturn(response);
-
 
         CreateHotelRequest request =
                 new CreateHotelRequest(
@@ -71,7 +67,6 @@ class HotelControllerTest {
                         "+33123456789",
                         "Luxury hotel"
                 );
-
 
         mockMvc.perform(
                         post("/api/hotels")
@@ -88,10 +83,8 @@ class HotelControllerTest {
 
     }
 
-
     @Test
     void shouldGetHotelByIdSuccessfully() throws Exception {
-
 
         HotelResponse response =
                 new HotelResponse(
@@ -103,7 +96,6 @@ class HotelControllerTest {
                         5,
                         "+33123456789"
                 );
-
 
         when(hotelService.getHotelById(1L))
                 .thenReturn(response);
@@ -123,10 +115,8 @@ class HotelControllerTest {
 
     }
 
-
     @Test
     void shouldGetAllHotelsSuccessfully() throws Exception {
-
 
         HotelResponse response =
                 new HotelResponse(
@@ -139,10 +129,8 @@ class HotelControllerTest {
                         "+33123456789"
                 );
 
-
         when(hotelService.getAllHotels())
                 .thenReturn(List.of(response));
-
 
         mockMvc.perform(
                         get("/api/hotels")
@@ -158,10 +146,8 @@ class HotelControllerTest {
 
     }
 
-
     @Test
     void shouldDeleteHotelSuccessfully() throws Exception {
-
 
         mockMvc.perform(
                         delete("/api/hotels/1")
@@ -169,10 +155,38 @@ class HotelControllerTest {
 
                 .andExpect(status().isNoContent());
 
-
         verify(hotelService)
                 .deleteHotel(1L);
 
     }
 
+    @Test
+    void shouldReturnBadRequestWhenCreateHotelRequestIsInvalid()
+            throws Exception {
+
+        CreateHotelRequest request =
+                new CreateHotelRequest(
+                        "",
+                        "",
+                        "",
+                        0,
+                        "",
+                        "Description"
+                );
+
+        mockMvc.perform(
+                        post("/api/hotels")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper.writeValueAsString(request)
+                                )
+                )
+
+                .andExpect(status().isBadRequest());
+        verify(
+                hotelService,
+                never()
+        )
+                .createHotel(any(CreateHotelRequest.class));
+    }
 }

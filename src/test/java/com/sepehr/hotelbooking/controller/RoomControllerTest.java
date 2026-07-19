@@ -60,8 +60,6 @@ class RoomControllerTest {
     @Test
     void shouldCreateRoomSuccessfully() throws Exception {
 
-
-
         RoomResponse response =
                 new RoomResponse(
                         1L,
@@ -72,13 +70,8 @@ class RoomControllerTest {
                         1L
                 );
 
-
-
         when(roomService.createRoom(any(CreateRoomRequest.class)))
                 .thenReturn(response);
-
-
-
 
         CreateRoomRequest request =
                 new CreateRoomRequest(
@@ -87,9 +80,6 @@ class RoomControllerTest {
                         BigDecimal.valueOf(150),
                         1L
                 );
-
-
-
 
         mockMvc.perform(
                         post("/api/rooms")
@@ -109,16 +99,8 @@ class RoomControllerTest {
 
     }
 
-
-
-
-
-
-
     @Test
     void shouldGetRoomByIdSuccessfully() throws Exception {
-
-
 
         RoomResponse response =
                 new RoomResponse(
@@ -130,13 +112,8 @@ class RoomControllerTest {
                         1L
                 );
 
-
-
         when(roomService.getRoomById(1L))
                 .thenReturn(response);
-
-
-
 
         mockMvc.perform(
                         get("/api/rooms/1")
@@ -152,17 +129,8 @@ class RoomControllerTest {
 
     }
 
-
-
-
-
-
-
-
     @Test
     void shouldGetAllRoomsSuccessfully() throws Exception {
-
-
 
         RoomResponse response =
                 new RoomResponse(
@@ -174,13 +142,8 @@ class RoomControllerTest {
                         1L
                 );
 
-
-
         when(roomService.getAllRooms())
                 .thenReturn(List.of(response));
-
-
-
 
         mockMvc.perform(
                         get("/api/rooms")
@@ -196,17 +159,8 @@ class RoomControllerTest {
 
     }
 
-
-
-
-
-
-
-
     @Test
     void shouldDeleteRoomSuccessfully() throws Exception {
-
-
 
         mockMvc.perform(
                         delete("/api/rooms/1")
@@ -214,13 +168,8 @@ class RoomControllerTest {
 
                 .andExpect(status().isNoContent());
 
-
-
-
         verify(roomService)
                 .deleteRoom(1L);
 
     }
-
-
 }
