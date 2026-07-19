@@ -27,6 +27,7 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
 
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
@@ -170,6 +171,35 @@ class RoomControllerTest {
 
         verify(roomService)
                 .deleteRoom(1L);
+
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenCreateRoomRequestIsInvalid()
+            throws Exception {
+
+        CreateRoomRequest request =
+                new CreateRoomRequest(
+                        "",
+                        null,
+                        BigDecimal.ZERO,
+                        null
+                );
+
+        mockMvc.perform(
+                        post("/api/rooms")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper.writeValueAsString(request)
+                                )
+                )
+
+                .andExpect(status().isBadRequest());
+        verify(
+                roomService,
+                never()
+        )
+                .createRoom(any(CreateRoomRequest.class));
 
     }
 }
