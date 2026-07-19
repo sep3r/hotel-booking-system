@@ -8,6 +8,10 @@ import com.sepehr.hotelbooking.dto.response.UserResponse;
 import com.sepehr.hotelbooking.service.UserService;
 
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.never;
+
 import org.junit.jupiter.api.Test;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,9 +21,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
-
 import java.util.List;
-
 
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -131,6 +133,40 @@ class UserControllerTest {
                                 )
                 )
                 .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void shouldReturnBadRequestWhenCreateUserRequestIsInvalid()
+            throws Exception {
+
+
+        CreateUserRequest request =
+                new CreateUserRequest(
+                        "",
+                        "",
+                        "invalid-email",
+                        "123",
+                        "abc"
+                );
+
+
+        mockMvc.perform(
+                        post("/api/users")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(
+                                        objectMapper.writeValueAsString(request)
+                                )
+                )
+
+                .andExpect(status().isBadRequest());
+
+
+        verify(
+                userService,
+                never()
+        )
+                .createUser(any(CreateUserRequest.class));
 
     }
 }
