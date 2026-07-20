@@ -22,7 +22,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class UserServiceImpl implements UserService {
 
-
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
 
@@ -31,7 +30,6 @@ public class UserServiceImpl implements UserService {
     @Transactional
     public UserResponse createUser(CreateUserRequest request) {
 
-
         User user = new User(
                 request.getFirstName(),
                 request.getLastName(),
@@ -39,18 +37,12 @@ public class UserServiceImpl implements UserService {
                 passwordEncoder.encode(request.getPassword()),
                 request.getPhoneNumber()
         );
-
-
         User savedUser = userRepository.save(user);
-
-
         return mapToResponse(savedUser);
     }
 
-
     @Override
     public UserResponse getUserById(Long id) {
-
 
         User user = userRepository.findById(id)
                 .orElseThrow(
@@ -58,15 +50,11 @@ public class UserServiceImpl implements UserService {
                                 "User not found with id: " + id
                         )
                 );
-
-
         return mapToResponse(user);
     }
 
-
     @Override
     public List<UserResponse> getAllUsers() {
-
 
         return userRepository.findAllByOrderByCreatedAtDesc()
                 .stream()
@@ -74,26 +62,33 @@ public class UserServiceImpl implements UserService {
                 .toList();
     }
 
-
     @Override
     @Transactional
     public void deleteUser(Long id) {
-
-
         User user = userRepository.findById(id)
                 .orElseThrow(
                         () -> new ResourceNotFoundException(
                                 "User not found with id: " + id
                         )
                 );
-
-
         userRepository.delete(user);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public UserResponse getCurrentUser(String email) {
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(
+                        () -> new ResourceNotFoundException(
+                                "User not found"
+                        )
+                );
+
+        return mapToResponse(user);
+    }
 
     private UserResponse mapToResponse(User user) {
-
         return new UserResponse(
                 user.getId(),
                 user.getFirstName(),
