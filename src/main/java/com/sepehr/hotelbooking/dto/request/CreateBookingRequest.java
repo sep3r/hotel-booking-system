@@ -3,6 +3,7 @@ package com.sepehr.hotelbooking.dto.request;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,11 +16,6 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateBookingRequest {
-
-
-    @NotNull(message = "User id is required.")
-    @Positive(message = "User id must be positive.")
-    private Long userId;
 
 
     @NotNull(message = "Room id is required.")

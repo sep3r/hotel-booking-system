@@ -77,21 +77,14 @@ class BookingControllerTest {
                         BigDecimal.valueOf(600),
                         BookingStatus.CONFIRMED
                 );
-
-
         when(bookingService.createBooking(any(CreateBookingRequest.class)))
                 .thenReturn(response);
-
-
         CreateBookingRequest request =
                 new CreateBookingRequest(
-                        10L,
-                        20L,
+                        1L,
                         LocalDate.of(2026, 8, 1),
-                        LocalDate.of(2026, 8, 5)
+                        LocalDate.of(2026, 8, 4)
                 );
-
-
         mockMvc.perform(
                         post("/api/bookings")
                                 .contentType(MediaType.APPLICATION_JSON)
@@ -99,21 +92,16 @@ class BookingControllerTest {
                                         objectMapper.writeValueAsString(request)
                                 )
                 )
-
                 .andExpect(status().isCreated())
-
                 .andExpect(jsonPath("$.userId")
                         .value(10))
-
                 .andExpect(jsonPath("$.roomId")
                         .value(20));
-
     }
 
 
     @Test
     void shouldGetBookingByIdSuccessfully() throws Exception {
-
 
         BookingResponse response =
                 new BookingResponse(
@@ -125,24 +113,16 @@ class BookingControllerTest {
                         BigDecimal.valueOf(600),
                         BookingStatus.CONFIRMED
                 );
-
-
         when(bookingService.getBookingById(1L))
                 .thenReturn(response);
-
-
         mockMvc.perform(
                         get("/api/bookings/1")
                 )
-
                 .andExpect(status().isOk())
-
                 .andExpect(jsonPath("$.userId")
                         .value(10))
-
                 .andExpect(jsonPath("$.roomId")
                         .value(20));
-
     }
 
     @Test
@@ -158,23 +138,16 @@ class BookingControllerTest {
                         BigDecimal.valueOf(600),
                         BookingStatus.CONFIRMED
                 );
-
-
         when(bookingService.getAllBookings())
                 .thenReturn(List.of(response));
-
         mockMvc.perform(
                         get("/api/bookings")
                 )
-
                 .andExpect(status().isOk())
-
                 .andExpect(jsonPath("$.length()")
                         .value(1))
-
                 .andExpect(jsonPath("$[0].roomId")
                         .value(20));
-
     }
 
     @Test
@@ -183,9 +156,7 @@ class BookingControllerTest {
         mockMvc.perform(
                         put("/api/bookings/1/cancel")
                 )
-
                 .andExpect(status().isNoContent());
-
         verify(bookingService)
                 .cancelBooking(1L);
 

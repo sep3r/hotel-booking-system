@@ -2,7 +2,6 @@ package com.sepehr.hotelbooking.service;
 
 
 import com.sepehr.hotelbooking.domain.*;
-
 import com.sepehr.hotelbooking.dto.request.CreateBookingRequest;
 import com.sepehr.hotelbooking.dto.response.BookingResponse;
 
@@ -12,24 +11,21 @@ import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 
 import com.sepehr.hotelbooking.repository.BookingRepository;
 import com.sepehr.hotelbooking.repository.RoomRepository;
-import com.sepehr.hotelbooking.repository.UserRepository;
+
+import com.sepehr.hotelbooking.security.CurrentUserService;
 
 import com.sepehr.hotelbooking.service.impl.BookingServiceImpl;
 
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Optional;
-
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -39,27 +35,19 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-
 class BookingServiceTest {
-
 
     @Mock
     private BookingRepository bookingRepository;
 
-
-    @Mock
-    private UserRepository userRepository;
-
-
     @Mock
     private RoomRepository roomRepository;
 
-
+    @Mock
+    private CurrentUserService currentUserService;
 
     @InjectMocks
     private BookingServiceImpl bookingService;
-
-
 
     private User user;
 
@@ -67,33 +55,34 @@ class BookingServiceTest {
 
     private Room room;
 
-
-
     @BeforeEach
     void setup() {
 
         MockitoAnnotations.openMocks(this);
-
         user = new User(
                 "Sepehr",
                 "Mirza",
-                "manager@test.com",
+                "user@test.com",
                 "password",
                 "09123456789"
         );
-
-        user.changeRole(Role.HOTEL_MANAGER);
-
-        Hotel hotel = new Hotel(
+        User manager = new User(
+                "Manager",
+                "Test",
+                "manager@test.com",
+                "password",
+                "09999999999"
+        );
+        manager.changeRole(Role.HOTEL_MANAGER);
+        hotel = new Hotel(
                 "Hilton",
                 "Berlin",
                 "Address",
                 "Description",
                 5,
                 "123456",
-                user
+                manager
         );
-
         room = new Room(
                 "101",
                 RoomType.DOUBLE,
@@ -108,12 +97,11 @@ class BookingServiceTest {
         CreateBookingRequest request =
                 new CreateBookingRequest(
                         1L,
-                        1L,
                         LocalDate.of(2026, 8, 1),
                         LocalDate.of(2026, 8, 4)
                 );
-        when(userRepository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(currentUserService.getCurrentUser())
+                .thenReturn(user);
         when(roomRepository.findById(1L))
                 .thenReturn(Optional.of(room));
         when(
@@ -139,8 +127,8 @@ class BookingServiceTest {
                 .isNotNull();
         assertThat(response.getTotalPrice())
                 .isEqualTo(BigDecimal.valueOf(300));
-        verify(userRepository)
-                .findById(1L);
+        verify(currentUserService)
+                .getCurrentUser();
         verify(roomRepository)
                 .findById(1L);
         verify(bookingRepository)
@@ -149,9 +137,9 @@ class BookingServiceTest {
 
     @Test
     void shouldThrowExceptionWhenCheckoutDateBeforeCheckinDate() {
+
         CreateBookingRequest request =
                 new CreateBookingRequest(
-                        1L,
                         1L,
                         LocalDate.of(2026, 8, 10),
                         LocalDate.of(2026, 8, 5)
@@ -161,7 +149,7 @@ class BookingServiceTest {
         )
                 .isInstanceOf(InvalidBookingDateException.class);
         verifyNoInteractions(
-                userRepository,
+                currentUserService,
                 roomRepository,
                 bookingRepository
         );
@@ -169,15 +157,15 @@ class BookingServiceTest {
 
     @Test
     void shouldThrowExceptionWhenRoomAlreadyBooked() {
+
         CreateBookingRequest request =
                 new CreateBookingRequest(
-                        1L,
                         1L,
                         LocalDate.of(2026, 8, 1),
                         LocalDate.of(2026, 8, 4)
                 );
-        when(userRepository.findById(1L))
-                .thenReturn(Optional.of(user));
+        when(currentUserService.getCurrentUser())
+                .thenReturn(user);
         when(roomRepository.findById(1L))
                 .thenReturn(Optional.of(room));
         when(
@@ -188,7 +176,7 @@ class BookingServiceTest {
                                 request.getCheckInDate()
                         )
         )
-               .thenReturn(true);
+                .thenReturn(true);
         assertThatThrownBy(
                 () -> bookingService.createBooking(request)
         )
@@ -198,26 +186,29 @@ class BookingServiceTest {
     }
 
     @Test
-    void shouldThrowExceptionWhenUserNotFound() {
+    void shouldThrowExceptionWhenRoomNotFound() {
+
         CreateBookingRequest request =
                 new CreateBookingRequest(
                         99L,
-                        1L,
                         LocalDate.of(2026, 8, 1),
                         LocalDate.of(2026, 8, 4)
                 );
-        when(userRepository.findById(99L))
+        when(currentUserService.getCurrentUser())
+                .thenReturn(user);
+        when(roomRepository.findById(99L))
                 .thenReturn(Optional.empty());
         assertThatThrownBy(
                 () -> bookingService.createBooking(request)
         )
                 .isInstanceOf(ResourceNotFoundException.class);
-       verify(roomRepository, never())
-                .findById(any());
+        verify(bookingRepository, never())
+                .save(any());
     }
 
     @Test
     void shouldCancelBookingSuccessfully() {
+
         Booking booking =
                 new Booking(
                         user,

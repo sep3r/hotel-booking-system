@@ -10,7 +10,7 @@ import com.sepehr.hotelbooking.exception.InvalidBookingDateException;
 import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 import com.sepehr.hotelbooking.repository.BookingRepository;
 import com.sepehr.hotelbooking.repository.RoomRepository;
-import com.sepehr.hotelbooking.repository.UserRepository;
+import com.sepehr.hotelbooking.security.CurrentUserService;
 import com.sepehr.hotelbooking.service.BookingService;
 
 import lombok.RequiredArgsConstructor;
@@ -28,8 +28,8 @@ import java.util.List;
 public class BookingServiceImpl implements BookingService {
 
     private final BookingRepository bookingRepository;
-    private final UserRepository userRepository;
     private final RoomRepository roomRepository;
+    private final CurrentUserService currentUserService;
 
     @Override
     @Transactional
@@ -40,9 +40,7 @@ public class BookingServiceImpl implements BookingService {
                     "Check-out date must be after check-in date.");
         }
 
-        User user = userRepository.findById(request.getUserId())
-                .orElseThrow(() -> new ResourceNotFoundException(
-                        "User not found with id: " + request.getUserId()));
+        User user = currentUserService.getCurrentUser();
 
         Room room = roomRepository.findById(request.getRoomId())
                 .orElseThrow(() -> new ResourceNotFoundException(
