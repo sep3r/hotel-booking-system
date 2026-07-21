@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 
@@ -25,8 +26,8 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @RequiredArgsConstructor
+@EnableMethodSecurity
 public class SecurityConfig {
-
 
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -34,24 +35,37 @@ public class SecurityConfig {
 
     private final PasswordEncoder passwordEncoder;
 
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(
             HttpSecurity http
     ) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
+
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(
                                 SessionCreationPolicy.STATELESS
                         )
-                ).authorizeHttpRequests(auth -> auth
+                )
+                .authorizeHttpRequests(auth -> auth
+
                         .requestMatchers(
                                 "/auth/register",
                                 "/auth/login"
                         )
                         .permitAll()
+
+                        .requestMatchers(
+                                "/api/hotels/**",
+                                "/api/rooms/**"
+                        )
+                        .hasRole("HOTEL_MANAGER")
+
+                        .requestMatchers(
+                                "/api/admin/**"
+                        )
+                        .hasRole("ADMIN")
+
                         .anyRequest()
                         .authenticated()
                 )
