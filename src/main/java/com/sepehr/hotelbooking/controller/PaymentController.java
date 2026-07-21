@@ -16,18 +16,14 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class PaymentController {
 
-
     private final PaymentService paymentService;
-
 
     @PostMapping("/booking/{bookingId}")
     public ResponseEntity<PaymentResponse> createPayment(
             @PathVariable Long bookingId
     ) {
-
         PaymentResponse response =
                 paymentService.createPayment(bookingId);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -38,7 +34,6 @@ public class PaymentController {
     public ResponseEntity<PaymentResponse> getPaymentById(
             @PathVariable Long id
     ) {
-
         return ResponseEntity
                 .ok(
                         paymentService.getPaymentById(id)
@@ -51,12 +46,10 @@ public class PaymentController {
             @PathVariable Long id,
             @RequestParam String transactionId
     ) {
-
         paymentService.processSuccessfulPayment(
                 id,
                 transactionId
         );
-
         return ResponseEntity
                 .noContent()
                 .build();
@@ -67,9 +60,7 @@ public class PaymentController {
     public ResponseEntity<Void> failedPayment(
             @PathVariable Long id
     ) {
-
         paymentService.processFailedPayment(id);
-
         return ResponseEntity
                 .noContent()
                 .build();
@@ -80,9 +71,7 @@ public class PaymentController {
     public ResponseEntity<Void> refundPayment(
             @PathVariable Long id
     ) {
-
         paymentService.refundPayment(id);
-
         return ResponseEntity
                 .noContent()
                 .build();

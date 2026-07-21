@@ -87,9 +87,13 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentials(
             BadCredentialsException ex
-    ){
+    ) {
+        ErrorResponse response = new ErrorResponse(
+                "Invalid email or password",
+                LocalDateTime.now()
+        );
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
-                .body("Invalid email or password");
+                .body(response);
     }
 }

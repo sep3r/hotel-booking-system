@@ -6,13 +6,14 @@ spring:
     driver-class-name: oracle.jdbc.OracleDriver
 
   jpa:
+    show-sql: true
+
     hibernate:
       ddl-auto: create-drop
 
-    show-sql: true
-
     properties:
       hibernate:
+        globally_quoted_identifiers: false
         format_sql: true
 
 jwt:

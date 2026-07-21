@@ -18,7 +18,6 @@ import java.time.LocalDateTime;
 @Table(name = "booking")
 public class Booking {
 
-
     @Id
     @GeneratedValue(
             strategy = GenerationType.SEQUENCE,

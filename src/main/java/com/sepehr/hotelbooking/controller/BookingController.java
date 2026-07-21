@@ -21,9 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BookingController {
 
-
     private final BookingService bookingService;
-
 
     @PostMapping
     public ResponseEntity<BookingResponse> createBooking(
@@ -32,7 +30,6 @@ public class BookingController {
 
         BookingResponse response =
                 bookingService.createBooking(request);
-
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -49,7 +46,6 @@ public class BookingController {
                         bookingService.getBookingById(id)
                 );
     }
-
 
     @GetMapping
     public ResponseEntity<List<BookingResponse>> getAllBookings() {
