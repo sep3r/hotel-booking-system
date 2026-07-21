@@ -2,16 +2,20 @@ package com.sepehr.hotelbooking.service.impl;
 
 
 import com.sepehr.hotelbooking.domain.Hotel;
+import com.sepehr.hotelbooking.domain.Role;
+import com.sepehr.hotelbooking.domain.User;
 import com.sepehr.hotelbooking.dto.request.CreateHotelRequest;
 import com.sepehr.hotelbooking.dto.response.HotelResponse;
 import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
 import com.sepehr.hotelbooking.repository.HotelRepository;
+import com.sepehr.hotelbooking.security.CurrentUserService;
 import com.sepehr.hotelbooking.service.HotelService;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.security.access.AccessDeniedException;
 
 import java.util.List;
 
@@ -21,14 +25,21 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class HotelServiceImpl implements HotelService {
 
+    private final CurrentUserService currentUserService;
 
     private final HotelRepository hotelRepository;
 
-
     @Override
-    @Transactional
     public HotelResponse createHotel(CreateHotelRequest request) {
 
+        User manager = currentUserService.getCurrentUser();
+
+        if (manager.getRole() != Role.HOTEL_MANAGER) {
+
+            throw new AccessDeniedException(
+                    "Only hotel managers can create hotels"
+            );
+        }
 
         Hotel hotel = new Hotel(
                 request.getHotelName(),
@@ -36,14 +47,11 @@ public class HotelServiceImpl implements HotelService {
                 request.getAddress(),
                 request.getDescription(),
                 request.getStarRating(),
-                request.getPhoneNumber()
+                request.getPhoneNumber(),
+                manager
         );
-
-
-        Hotel savedHotel = hotelRepository.save(hotel);
-
-
-        return mapToResponse(savedHotel);
+        hotelRepository.save(hotel);
+        return mapToResponse(hotel);
     }
 
 

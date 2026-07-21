@@ -9,7 +9,6 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-
 @Entity
 @Table(name = "hotel")
 public class Hotel {
@@ -79,6 +78,12 @@ public class Hotel {
     )
     private String phoneNumber;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(
+            name = "manager_id",
+            nullable = false
+    )
+    private User manager;
 
     public Hotel(
             String hotelName,
@@ -86,7 +91,8 @@ public class Hotel {
             String address,
             String description,
             Integer starRating,
-            String phoneNumber
+            String phoneNumber,
+            User manager
     ) {
 
         this.hotelName = hotelName;
@@ -95,5 +101,6 @@ public class Hotel {
         this.description = description;
         this.starRating = starRating;
         this.phoneNumber = phoneNumber;
+        this.manager = manager;
     }
 }

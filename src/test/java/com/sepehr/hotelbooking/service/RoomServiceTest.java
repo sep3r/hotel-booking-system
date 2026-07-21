@@ -1,10 +1,7 @@
 package com.sepehr.hotelbooking.service;
 
 
-import com.sepehr.hotelbooking.domain.Hotel;
-import com.sepehr.hotelbooking.domain.Room;
-import com.sepehr.hotelbooking.domain.RoomStatus;
-import com.sepehr.hotelbooking.domain.RoomType;
+import com.sepehr.hotelbooking.domain.*;
 import com.sepehr.hotelbooking.dto.request.CreateRoomRequest;
 import com.sepehr.hotelbooking.dto.response.RoomResponse;
 import com.sepehr.hotelbooking.exception.ResourceNotFoundException;
@@ -34,46 +31,46 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 
-
 class RoomServiceTest {
-
 
     @Mock
     private RoomRepository roomRepository;
 
-
     @Mock
     private HotelRepository hotelRepository;
 
-
     @InjectMocks
     private RoomServiceImpl roomService;
-
-
 
     private Hotel hotel;
 
     private Room room;
 
 
-
     @BeforeEach
     void setup() {
 
-
         MockitoAnnotations.openMocks(this);
 
+        User manager = new User(
+                "Sepehr",
+                "Mirza",
+                "manager@test.com",
+                "password",
+                "09123456789"
+        );
 
+        manager.changeRole(Role.HOTEL_MANAGER);
 
         hotel = new Hotel(
                 "Hilton",
-                "Paris",
-                "France",
-                "Luxury hotel",
+                "Berlin",
+                "Address",
+                "Description",
                 5,
-                "+33123456789"
+                "123456",
+                manager
         );
-
 
         room = new Room(
                 "101",
@@ -81,16 +78,10 @@ class RoomServiceTest {
                 BigDecimal.valueOf(150),
                 hotel
         );
-
     }
-
-
-
-
 
     @Test
     void shouldCreateRoomSuccessfully() {
-
 
         CreateRoomRequest request =
                 new CreateRoomRequest(
@@ -100,54 +91,27 @@ class RoomServiceTest {
                         1L
                 );
 
-
-
         when(hotelRepository.findById(1L))
                 .thenReturn(Optional.of(hotel));
-
-
-
         when(roomRepository.save(any(Room.class)))
                 .thenReturn(room);
-
-
-
         RoomResponse response =
                 roomService.createRoom(request);
-
-
-
         assertThat(response)
                 .isNotNull();
-
-
         assertThat(response.getRoomNumber())
                 .isEqualTo("101");
-
-
         assertThat(response.getPricePerNight())
                 .isEqualTo(BigDecimal.valueOf(150));
-
-
-
         verify(hotelRepository)
                 .findById(1L);
-
-
-
         verify(roomRepository)
                 .save(any(Room.class));
-
     }
-
-
-
-
 
 
     @Test
     void shouldThrowExceptionWhenHotelNotFound() {
-
 
         CreateRoomRequest request =
                 new CreateRoomRequest(
@@ -156,14 +120,8 @@ class RoomServiceTest {
                         BigDecimal.valueOf(150),
                         99L
                 );
-
-
-
         when(hotelRepository.findById(99L))
                 .thenReturn(Optional.empty());
-
-
-
         assertThatThrownBy(
                 () -> roomService.createRoom(request)
         )
@@ -171,63 +129,29 @@ class RoomServiceTest {
                 .hasMessage(
                         "Hotel not found with id: 99"
                 );
-
-
-
         verify(roomRepository, never())
                 .save(any(Room.class));
 
     }
 
-
-
-
-
-
-
     @Test
     void shouldGetRoomByIdSuccessfully() {
-
-
         when(roomRepository.findById(1L))
                 .thenReturn(Optional.of(room));
-
-
-
         RoomResponse response =
                 roomService.getRoomById(1L);
-
-
-
         assertThat(response)
                 .isNotNull();
-
-
         assertThat(response.getRoomNumber())
                 .isEqualTo("101");
-
-
-
         verify(roomRepository)
                 .findById(1L);
-
     }
-
-
-
-
-
-
 
     @Test
     void shouldThrowExceptionWhenRoomNotFound() {
-
-
         when(roomRepository.findById(10L))
                 .thenReturn(Optional.empty());
-
-
-
         assertThatThrownBy(
                 () -> roomService.getRoomById(10L)
         )
@@ -235,68 +159,30 @@ class RoomServiceTest {
                 .hasMessage(
                         "Room not found with id: 10"
                 );
-
     }
-
-
-
-
-
-
 
     @Test
     void shouldReturnAllRooms() {
-
-
         when(roomRepository.findAll())
                 .thenReturn(
                         List.of(room)
                 );
-
-
-
         List<RoomResponse> response =
                 roomService.getAllRooms();
-
-
-
         assertThat(response)
                 .hasSize(1);
-
-
-
         assertThat(response.get(0).getRoomNumber())
                 .isEqualTo("101");
-
-
-
         verify(roomRepository)
                 .findAll();
-
     }
-
-
-
-
-
-
 
     @Test
     void shouldDeleteRoomSuccessfully() {
-
-
         when(roomRepository.findById(1L))
                 .thenReturn(Optional.of(room));
-
-
-
         roomService.deleteRoom(1L);
-
-
-
         verify(roomRepository)
                 .delete(room);
-
     }
-
 }

@@ -1,12 +1,7 @@
 package com.sepehr.hotelbooking.service;
 
 
-import com.sepehr.hotelbooking.domain.Booking;
-import com.sepehr.hotelbooking.domain.BookingStatus;
-import com.sepehr.hotelbooking.domain.Hotel;
-import com.sepehr.hotelbooking.domain.Room;
-import com.sepehr.hotelbooking.domain.RoomType;
-import com.sepehr.hotelbooking.domain.User;
+import com.sepehr.hotelbooking.domain.*;
 
 import com.sepehr.hotelbooking.dto.request.CreateBookingRequest;
 import com.sepehr.hotelbooking.dto.response.BookingResponse;
@@ -77,31 +72,27 @@ class BookingServiceTest {
     @BeforeEach
     void setup() {
 
-
         MockitoAnnotations.openMocks(this);
-
-
 
         user = new User(
                 "Sepehr",
                 "Mirza",
-                "sepehr@test.com",
-                "password123",
-                "+989121234567"
+                "manager@test.com",
+                "password",
+                "09123456789"
         );
 
+        user.changeRole(Role.HOTEL_MANAGER);
 
-
-        hotel = new Hotel(
+        Hotel hotel = new Hotel(
                 "Hilton",
-                "Paris",
-                "France",
-                "Luxury hotel",
+                "Berlin",
+                "Address",
+                "Description",
                 5,
-                "+33123456789"
+                "123456",
+                user
         );
-
-
 
         room = new Room(
                 "101",
@@ -109,16 +100,10 @@ class BookingServiceTest {
                 BigDecimal.valueOf(100),
                 hotel
         );
-
     }
-
-
-
-
 
     @Test
     void shouldCreateBookingSuccessfully() {
-
 
         CreateBookingRequest request =
                 new CreateBookingRequest(
@@ -127,19 +112,10 @@ class BookingServiceTest {
                         LocalDate.of(2026, 8, 1),
                         LocalDate.of(2026, 8, 4)
                 );
-
-
-
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user));
-
-
-
         when(roomRepository.findById(1L))
                 .thenReturn(Optional.of(room));
-
-
-
         when(
                 bookingRepository
                         .existsByRoomIdAndCheckInDateLessThanAndCheckOutDateGreaterThan(
@@ -147,11 +123,7 @@ class BookingServiceTest {
                                 request.getCheckOutDate(),
                                 request.getCheckInDate()
                         )
-        )
-                .thenReturn(false);
-
-
-
+        ).thenReturn(false);
         Booking booking = new Booking(
                 user,
                 room,
@@ -159,54 +131,24 @@ class BookingServiceTest {
                 request.getCheckOutDate(),
                 BigDecimal.valueOf(300)
         );
-
-
-
         when(bookingRepository.save(any(Booking.class)))
                 .thenReturn(booking);
-
-
-
         BookingResponse response =
                 bookingService.createBooking(request);
-
-
-
         assertThat(response)
                 .isNotNull();
-
-
-
         assertThat(response.getTotalPrice())
                 .isEqualTo(BigDecimal.valueOf(300));
-
-
-
         verify(userRepository)
                 .findById(1L);
-
-
-
         verify(roomRepository)
                 .findById(1L);
-
-
-
         verify(bookingRepository)
                 .save(any(Booking.class));
-
     }
-
-
-
-
-
-
 
     @Test
     void shouldThrowExceptionWhenCheckoutDateBeforeCheckinDate() {
-
-
         CreateBookingRequest request =
                 new CreateBookingRequest(
                         1L,
@@ -214,34 +156,19 @@ class BookingServiceTest {
                         LocalDate.of(2026, 8, 10),
                         LocalDate.of(2026, 8, 5)
                 );
-
-
-
         assertThatThrownBy(
                 () -> bookingService.createBooking(request)
         )
                 .isInstanceOf(InvalidBookingDateException.class);
-
-
-
         verifyNoInteractions(
                 userRepository,
                 roomRepository,
                 bookingRepository
         );
-
     }
-
-
-
-
-
-
 
     @Test
     void shouldThrowExceptionWhenRoomAlreadyBooked() {
-
-
         CreateBookingRequest request =
                 new CreateBookingRequest(
                         1L,
@@ -249,19 +176,10 @@ class BookingServiceTest {
                         LocalDate.of(2026, 8, 1),
                         LocalDate.of(2026, 8, 4)
                 );
-
-
-
         when(userRepository.findById(1L))
                 .thenReturn(Optional.of(user));
-
-
-
         when(roomRepository.findById(1L))
                 .thenReturn(Optional.of(room));
-
-
-
         when(
                 bookingRepository
                         .existsByRoomIdAndCheckInDateLessThanAndCheckOutDateGreaterThan(
@@ -270,32 +188,17 @@ class BookingServiceTest {
                                 request.getCheckInDate()
                         )
         )
-                .thenReturn(true);
-
-
-
+               .thenReturn(true);
         assertThatThrownBy(
                 () -> bookingService.createBooking(request)
         )
                 .isInstanceOf(BookingConflictException.class);
-
-
-
         verify(bookingRepository, never())
                 .save(any());
-
     }
-
-
-
-
-
-
 
     @Test
     void shouldThrowExceptionWhenUserNotFound() {
-
-
         CreateBookingRequest request =
                 new CreateBookingRequest(
                         99L,
@@ -303,36 +206,18 @@ class BookingServiceTest {
                         LocalDate.of(2026, 8, 1),
                         LocalDate.of(2026, 8, 4)
                 );
-
-
-
         when(userRepository.findById(99L))
                 .thenReturn(Optional.empty());
-
-
-
         assertThatThrownBy(
                 () -> bookingService.createBooking(request)
         )
                 .isInstanceOf(ResourceNotFoundException.class);
-
-
-
-        verify(roomRepository, never())
+       verify(roomRepository, never())
                 .findById(any());
-
     }
-
-
-
-
-
-
 
     @Test
     void shouldCancelBookingSuccessfully() {
-
-
         Booking booking =
                 new Booking(
                         user,
@@ -341,26 +226,12 @@ class BookingServiceTest {
                         LocalDate.of(2026, 8, 4),
                         BigDecimal.valueOf(300)
                 );
-
-
-
         when(bookingRepository.findById(1L))
                 .thenReturn(Optional.of(booking));
-
-
-
         bookingService.cancelBooking(1L);
-
-
-
         assertThat(booking.getStatus())
                 .isEqualTo(BookingStatus.CANCELLED);
-
-
-
         verify(bookingRepository)
                 .findById(1L);
-
     }
-
 }
