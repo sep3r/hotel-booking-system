@@ -50,9 +50,9 @@ public class AuthServiceImpl implements AuthService {
                 passwordEncoder.encode(request.password()),
                 request.phoneNumber()
         );
-        userRepository.save(user);
+        User savedUser = userRepository.save(user);
         return new AuthResponse(
-                jwtService.generateToken(request.email())
+                jwtService.generateToken(savedUser.getEmail())
         );
     }
 

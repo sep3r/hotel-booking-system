@@ -39,7 +39,6 @@ public record RegisterRequest(
                 message = "Phone number is required."
         )
         String phoneNumber
+){
 
-
-) {
 }
