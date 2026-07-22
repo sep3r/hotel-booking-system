@@ -43,7 +43,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(BookingController.class)
 class BookingControllerTest {
 
-
     @MockitoBean
     private JwtService jwtService;
 
@@ -53,15 +52,12 @@ class BookingControllerTest {
     @Autowired
     private MockMvc mockMvc;
 
-
     private final ObjectMapper objectMapper =
             new ObjectMapper()
                     .registerModule(new JavaTimeModule());
 
-
     @MockitoBean
     private BookingService bookingService;
-
 
     @Test
     void shouldCreateBookingSuccessfully() throws Exception {
