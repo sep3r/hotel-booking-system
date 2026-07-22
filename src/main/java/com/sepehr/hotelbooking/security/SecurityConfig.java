@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import org.springframework.http.HttpMethod;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -22,6 +23,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 
@@ -50,42 +52,27 @@ public class SecurityConfig {
                                 SessionCreationPolicy.STATELESS
                         )
                 )
+                .exceptionHandling(exception ->
+                        exception.authenticationEntryPoint(
+                                new HttpStatusEntryPoint(
+                                        HttpStatus.UNAUTHORIZED
+                                )
+                        )
+                )
                 .authorizeHttpRequests(auth -> auth
-                        // Authentication endpoints
                         .requestMatchers(
                                 "/auth/register",
                                 "/auth/login"
                         )
                         .permitAll()
-                        // Anyone can search hotels
-                        .requestMatchers(
-                                HttpMethod.GET,
-                                "/api/hotels/**"
-                        )
-                        .permitAll()
-                        // Hotel management
-                        .requestMatchers(
-                                "/api/hotels/**",
-                                "/api/rooms/**"
-                        )
-                        .hasRole("HOTEL_MANAGER")
-                        // Admin endpoints
-                        .requestMatchers(
-                                "/api/admin/**"
-                        )
-                        .hasRole("ADMIN")
-                        // Booking operations
                         .requestMatchers(
                                 "/api/bookings/**"
                         )
                         .hasRole("CUSTOMER")
                         .anyRequest()
                         .authenticated()
-
                 )
-                .authenticationProvider(
-                        authenticationProvider()
-                )
+                .authenticationProvider(authenticationProvider())
                 .addFilterBefore(
                         jwtAuthenticationFilter,
                         UsernamePasswordAuthenticationFilter.class
