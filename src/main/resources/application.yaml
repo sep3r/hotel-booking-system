@@ -1,24 +1,18 @@
 spring:
 
-  datasource:
-    url: jdbc:oracle:thin:@localhost:1521/FREEPDB1
-    username: hotel
-    password: hotel123
-    driver-class-name: oracle.jdbc.OracleDriver
-
-
   jpa:
     show-sql: true
 
-    hibernate:
-      ddl-auto: create
-
     properties:
       hibernate:
-        globally_quoted_identifiers: false
         format_sql: true
+        globally_quoted_identifiers: false
+
+
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
 
 
 jwt:
-  secret: my-super-secret-key-my-super-secret-key-123456
   expiration: 86400000

@@ -6,9 +6,16 @@ spring:
     password: hotel123
     driver-class-name: oracle.jdbc.OracleDriver
 
+
   jpa:
+
     hibernate:
       ddl-auto: update
 
+
+    open-in-view: false
+
+
 jwt:
+
   secret: my-super-secret-key-my-super-secret-key-123456
